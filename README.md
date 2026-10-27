@@ -82,7 +82,7 @@ export DATA_ROOT=/path/to/datasets
 | TLIO      | Pedestrian, head-mounted      | 31.6 h   | **[TLIO](https://github.com/CathIAS/TLIO)** | `TLIO/` |
 | EuRoC     | Micro aerial vehicle          | 22.5 min | **[ETH ASL](https://projects.asl.ethz.ch/datasets/euroc-mav)** | `EuRoC/<seq>/mav0/` |
 | Blackbird | Racing drone                  | 5.0 h    | **[Blackbird](https://github.com/mit-aera/Blackbird-Dataset)** | `BlackBird/` |
-| MIPO      | Unitree Go1 quadruped, 5 IMUs | 58.6 min | **[🤗 Open-IO/mipo-go1-odometry](https://huggingface.co/datasets/Open-IO/mipo-go1-odometry)** | `mipo_hdf5/indoor/` |
+| MIPO      | Unitree Go1 quadruped, 5 IMUs | 58.6 min | **[🤗 mipo-go1-odometry](https://huggingface.co/datasets/Open-IO/mipo-go1-odometry)** | `mipo_hdf5/indoor/` |
 | GrandTour | ANYmal quadruped, outdoor     | 5.65 h   | **[GrandTour](https://grand-tour.leggedrobotics.com)** | `grand_tour/` |
 | Humanoid  | Unitree G1 humanoid           | 1.17 h   | **[🤗 humanoid-g1-odometry](https://huggingface.co/datasets/Open-IO/humanoid-g1-odometry)** | `humanoid_g1/` |
 
