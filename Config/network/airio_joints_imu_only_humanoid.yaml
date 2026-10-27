@@ -1,0 +1,37 @@
+_target_: Model.airio.JointsAirIONetworkIMUOnly
+
+# Unitree G1 humanoid joints net with NO orientation input — the Humanoid variant of
+# airio_joints_imu_only.yaml. 1 pelvis IMU + 29 body joints. The G1 records q, dq
+# and tau_est (position / velocity / effort); ddq is all-zero and not used.
+#
+# Caveat carries over: the trainer still lifts body velocity to world with GT
+# attitude (wrap the dataset in Sequence.WindowIntegratedOrientation to remove
+# that too).
+k_list: [7, 7]
+s_list: [3, 3]
+p_list: [3, 3]
+
+num_imus:   1
+num_joints: 29
+
+# joint input dim = len(joint_channels) * num_joints = 3 * 29 = 87.
+joint_channels: [position, velocity, effort]
+
+imu_encoder_channels:   [32, 64]
+joint_encoder_channels: [32, 64]
+
+fusion_dim:    64
+fusion_hidden: 128
+
+gru1_hidden: 64
+gru2_hidden: 128
+bidirectional: true
+
+decoder_hidden: 128
+
+# Which IMU stream the network reads (`Model/airio.py::select_imu`):
+#   raw       -> acc / gyro                     as measured by the sensor
+#   corrected -> corrected_acc / corrected_gyro  bias-calibration output
+# Required: there is no constructor default, and the Delta-v reference selects its
+# own stream via `train.dv_imu_input`.
+imu_input: raw

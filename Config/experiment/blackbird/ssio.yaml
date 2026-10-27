@@ -1,0 +1,17 @@
+# @package _global_
+# Tab. II "Ours", Blackbird. HF stage1/fpza91ml,
+# 0.4748 / 18.39 AVE (m/s) / ATE (m) on BlackBird_Test. Longest Δv horizon 2.43 s at 100 Hz (Tab. VI).
+#   python train_ssio.py +experiment=blackbird/ssio
+defaults:
+  - override /dataset@train_dataset: BlackBird_Train_Randomized
+  - override /dataset@eval_dataset : BlackBird_Valid
+  - override /network: airio_imu_only
+  - override /loss   : ssio_dv_1_3_9_27
+
+train:
+  lr         : 1.0e-3
+  decay      : 1.0e-3
+  batch      : 512
+  epoch      : 120
+  regularization_gate  : imu
+  regularization_weight: 0.1

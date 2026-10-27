@@ -1,0 +1,21 @@
+# @package _global_
+# Tab. II "AirIO†" (supervised), GrandTour. HF supervised/ghgafmbs,
+# 0.0702 / 3.38 AVE (m/s) / ATE (m) on ANYmal_Test. For the "AirIO" row add network=airio
+# (HF supervised/oyor793p).
+#   python train_ssio.py +experiment=grandtour/airio
+defaults:
+  - override /dataset@train_dataset: ANYmal_SSL
+  - override /dataset@eval_dataset : ANYmal_Val
+  - override /network: airio_imu_only
+  - override /loss   : supervised_only
+
+modality:
+  use_aux_imu: false
+  use_joints : false
+
+train:
+  lr         : 1.0e-3
+  decay      : 1.0e-3
+  batch      : 512
+  epoch      : 30
+  regularization_weight: 0.0

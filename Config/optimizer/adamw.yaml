@@ -1,0 +1,5 @@
+_target_: torch.optim.AdamW
+
+lr          : ${train.lr}
+weight_decay: ${train.decay}
+fused       : true

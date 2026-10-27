@@ -1,0 +1,39 @@
+# MIPO_Test.yaml
+# 12 sequences, 5 IMUs, 16 joints. Disjoint from MIPO_Train.yaml and MIPO_Valid.yaml.
+
+_outer: &outer
+  _target_: Sequence.SlidingWindow.SlidingWindow
+  config:
+    window_size : ${train.window}
+    step_size   : ${train.window}
+
+_inner: &inner
+  _target_: Sequence.MIPO.MIPO_Sequence
+
+_inner_config: &inner_config
+  data_root        : ${host_env:DATA_ROOT}/mipo_hdf5/indoor
+  device           : ${meta.device}
+  dtype            : ${meta.dtype}
+  acc_sigma        : 0.1
+  gyro_sigma       : 0.0316227766
+  num_imus         : 5
+  num_joints       : 16
+  target_rate      : 200.0
+  velocity_window_time: 0.1
+  calibration_file : ${host_env:DATA_ROOT}/mipo_hdf5/indoor/mipo_time_offsets.json
+  debias           : true
+  calibrater       : {kind: imu, debias_gyro: false}   # IMU-only static frames; IMU 0 acc only, aux IMUs stay raw
+
+sequences:
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "230622_robustness/230622-risqh-trot-02-044-33square.h5"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "230622_robustness/230622-risqh-trot-02-052-33square.h5"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "230622_robustness/230622-risqh-trot-06-044-33square.h5"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "20230625_gait/230625-risqh-standtrot-02-040-33square.h5"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "20230625_gait/230625-risqh-standtrot-06-040-33square.h5"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "20230625_gait/230625-risqh-standtrot-08-040-33square.h5"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "20230625_gait/230625-risqh-flytrot-08-032-33square.h5"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "20230625_gait/230625-risqh-flytrot-06-036-33square.h5"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "20230615_risqh_gait_analysis/20230615-risqh-standtrot-04-06-square.h5"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "20230620_risqh_robustness_test/230620-risqh-trot-10-036-33square-convexmpc.h5"}}} # only convexmpc run without GT mocap freeze and then jump.
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "20230620_risqh_robustness_test/230620-risqh-trot-05-048-33square.h5"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "20230615_risqh_gait_analysis/20230615-risqh-flyingtrot-04-04-square.h5"}}}

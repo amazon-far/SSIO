@@ -1,0 +1,20 @@
+# @package _global_
+# Tab. III "AirIO† + Proprio" (supervised), GrandTour. HF supervised/cdw3gb3x,
+# 0.0725 / 3.62 AVE (m/s) / ATE (m) on ANYmal_Test.
+#   python train_ssio.py +experiment=grandtour/airio_proprio
+defaults:
+  - override /dataset@train_dataset: ANYmal_SSL
+  - override /dataset@eval_dataset : ANYmal_Val
+  - override /network: airio_joints_imu_only_anymal
+  - override /loss   : supervised_only
+
+modality:
+  use_aux_imu: false
+  use_joints : true
+
+train:
+  lr         : 1.0e-3
+  decay      : 1.0e-3
+  batch      : 512
+  epoch      : 30
+  regularization_weight: 0.0

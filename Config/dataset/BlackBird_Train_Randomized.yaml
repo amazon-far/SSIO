@@ -1,0 +1,93 @@
+# BlackBird_Train_Randomized.yaml — RandomWindow(BlackBird_Sequence) per trajectory.
+# seq_name values are relative to data_root.
+# acc_sigma / gyro_sigma = sqrt(acc_cov), sqrt(gyro_cov).
+
+_outer: &outer
+  _target_: Sequence.RandomWindow.RandomWindow
+  config:
+    window_size :  ${train.window}
+
+_inner: &inner
+  _target_: Sequence.BlackBird.BlackBird_Sequence
+
+_inner_config: &inner_config
+  data_root: ${host_env:DATA_ROOT}/BlackBird
+  device: ${meta.device}
+  dtype: ${meta.dtype}
+  acc_sigma  : 0.01
+  gyro_sigma : 0.01
+  gravity: 9.81007
+  debias     : true   # subtract constant acc/gyro bias over near-static runs; see Sequence/BlackBird.py. Frame alignment happens regardless of this flag.
+  calibrater :        # static frames from IMU statistics, no GT speed (Doc/debias.md)
+    kind     : imu
+
+sequences:
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "sid/yawForward/maxSpeed4p0"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "bentDice/yawForward/maxSpeed0p5"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "thrice/yawForward/maxSpeed1p0"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "3dFigure8/yawConstant/maxSpeed0p5"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "ampersand/yawForward/maxSpeed2p0"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "clover/yawForward/maxSpeed3p0"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "ampersand/yawForward/maxSpeed1p0"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "winter/yawForward/maxSpeed3p0"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "patrick/yawForward/maxSpeed4p0"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "mouse/yawForward/maxSpeed5p0"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "tiltedThrice/yawForward/maxSpeed5p0"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "thrice/yawForward/maxSpeed0p5"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "picasso/yawConstant/maxSpeed5p0"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "3dFigure8/yawConstant/maxSpeed1p0"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "sid/yawForward/maxSpeed1p0"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "dice/yawForward/maxSpeed2p0"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "dice/yawForward/maxSpeed1p0"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "figure8/yawConstant/maxSpeed0p5"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "figure8/yawConstant/maxSpeed5p0"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "winter/yawForward/maxSpeed0p5"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "3dFigure8/yawConstant/maxSpeed4p0"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "sphinx/yawForward/maxSpeed2p0"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "thrice/yawForward/maxSpeed2p0"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "thrice/yawForward/maxSpeed6p0"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "halfMoon/yawForward/maxSpeed1p5"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "figure8/yawConstant/maxSpeed3p25"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "thrice/yawForward/maxSpeed4p0"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "winter/yawForward/maxSpeed2p0"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "halfMoon/yawForward/maxSpeed1p0"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "picasso/yawConstant/maxSpeed4p0"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "winter/yawForward/maxSpeed4p0"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "sphinx/yawForward/maxSpeed1p0"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "picasso/yawConstant/maxSpeed1p0"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "mouse/yawForward/maxSpeed4p0"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "tiltedThrice/yawForward/maxSpeed6p0"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "figure8/yawConstant/maxSpeed2p0"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "patrick/yawForward/maxSpeed0p5"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "sid/yawForward/maxSpeed5p0"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "patrick/yawForward/maxSpeed1p0"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "tiltedThrice/yawForward/maxSpeed3p0"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "oval/yawForward/maxSpeed2p0"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "clover/yawForward/maxSpeed4p0"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "halfMoon/yawForward/maxSpeed4p0"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "sid/yawForward/maxSpeed2p0"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "dice/yawForward/maxSpeed3p0"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "halfMoon/yawForward/maxSpeed3p0"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "oval/yawForward/maxSpeed1p0"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "sphinx/yawForward/maxSpeed3p0"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "thrice/yawForward/maxSpeed3p0"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "oval/yawForward/maxSpeed3p0"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "star/yawForward/maxSpeed1p0"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "mouse/yawForward/maxSpeed0p5"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "tiltedThrice/yawForward/maxSpeed0p5"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "sphinx/yawForward/maxSpeed4p0"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "star/yawForward/maxSpeed4p0"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "clover/yawForward/maxSpeed0p5"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "star/yawForward/maxSpeed2p0"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "clover/yawForward/maxSpeed1p0"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "clover/yawForward/maxSpeed2p0"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "mouse/yawForward/maxSpeed2p0"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "sid/yawForward/maxSpeed0p5"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "tiltedThrice/yawForward/maxSpeed2p0"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "tiltedThrice/yawForward/maxSpeed1p0"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "thrice/yawForward/maxSpeed5p0"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "3dFigure8/yawConstant/maxSpeed2p0"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "oval/yawForward/maxSpeed4p0"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "mouse/yawForward/maxSpeed1p0"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "bentDice/yawForward/maxSpeed2p0"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "figure8/yawConstant/maxSpeed1p0"}}}

@@ -1,0 +1,17 @@
+# @package _global_
+# Tab. II "AirIO†" (supervised), Humanoid. HF supervised/0102al6c,
+# 0.0959 / 1.40 AVE (m/s) / ATE (m) on HumanoidOdom_Test. For the "AirIO" row add network=airio
+# (HF supervised/c3qimksm).
+#   python train_ssio.py +experiment=humanoid/airio
+defaults:
+  - override /dataset@train_dataset: HumanoidOdom_Train
+  - override /dataset@eval_dataset : HumanoidOdom_Valid
+  - override /network: airio_imu_only
+  - override /loss   : supervised_only
+
+train:
+  lr         : 1.0e-3
+  decay      : 1.0e-3
+  batch      : 512
+  epoch      : 128
+  regularization_weight: 0.0

@@ -1,0 +1,22 @@
+# @package _global_
+# Tab. III "Ours + Proprio", GrandTour. HF stage1/cl7pny4l,
+# 0.0907 / 3.66 AVE (m/s) / ATE (m) on ANYmal_Test.
+# Epoch and regularization_weight differ from ssio.yaml, as in the HF run.
+#   python train_ssio.py +experiment=grandtour/ssio_proprio
+defaults:
+  - override /dataset@train_dataset: ANYmal_SSL
+  - override /dataset@eval_dataset : ANYmal_Val
+  - override /network: airio_joints_imu_only_anymal
+  - override /loss   : ssio_dv_1_3_9_27_81
+
+modality:
+  use_aux_imu: false
+  use_joints : true
+
+train:
+  lr         : 5.0e-5
+  decay      : 1.0e-5
+  batch      : 256
+  epoch      : 60
+  regularization_gate  : imu
+  regularization_weight: 0.1

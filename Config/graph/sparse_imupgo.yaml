@@ -1,0 +1,11 @@
+_target_: Optimizer.sparse_pgo.Sparse_IMUPGOGraph
+
+anchor_weight: 1.0e6      # rotation anchor prior at anchor 0
+vel_prior_weight: 1.0e6   # GT body velocity at anchor 0, seeded and pinned (1e6 = 1 mm/s std)
+max_iter     : 10         # Gauss-Newton iterations; each is an exact cuDSS direct solve
+tol          : 1.0e-5     # ||dx||_inf convergence threshold
+
+# chi-square(3) gate on velocity observations by Mahalanobis distance to the IMU-chain solution; null = off.
+# Quantiles: 7.81 (p=0.05), 11.34 (p=0.01), 16.27 (p=0.001).
+obs_reject_chi2: null
+obs_reject_all: false     # true: drop every observation above the gate per pass; false: at most one

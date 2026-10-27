@@ -1,0 +1,17 @@
+# @package _global_
+# Tab. II "Ours", EuRoC. HF stage1/189uubgg,
+# 0.4227 / 9.03 AVE (m/s) / ATE (m) on EuRoC_Test. Longest Δv horizon 1.22 s (Tab. VI).
+#   python train_ssio.py +experiment=euroc/ssio
+defaults:
+  - override /dataset@train_dataset: EuRoC_Train_Randomized
+  - override /dataset@eval_dataset : EuRoC_Valid
+  - override /network: airio_imu_only
+  - override /loss   : ssio_dv_1_3_9_27
+
+train:
+  lr         : 1.0e-3
+  decay      : 1.0e-3
+  batch      : 64
+  epoch      : 150
+  regularization_gate  : imu
+  regularization_weight: 0.1

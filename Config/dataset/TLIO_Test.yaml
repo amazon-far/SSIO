@@ -1,0 +1,57 @@
+# TLIO_Test.yaml -- one SlidingWindow(TLIO_Sequence(...)) per test sequence.
+# Everything except seq.config.seq_name is shared via YAML anchors.
+
+_outer: &outer
+  _target_: Sequence.SlidingWindow.SlidingWindow
+  config:
+    window_size : ${train.window}
+    step_size   : ${train.window}
+
+_inner: &inner
+  _target_: Sequence.TLIO.TLIO_Sequence
+
+_inner_config: &inner_config
+  data_root  : ${host_env:DATA_ROOT}/TLIO
+  device     : ${meta.device}
+  dtype      : ${meta.dtype}
+  acc_sigma  : 0.01
+  gyro_sigma : 0.01
+
+
+sequences:
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "145820422949970"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "146734859523827"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "182009952689275"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "198123397647575"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "203487666948423"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "232871430741025"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "237500726938324"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "247823452637228"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "263070267597787"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "286510035288905"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "299905500837994"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "327734051135228"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "353903485150701"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "395135734333599"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "399195950576622"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "410916322722958"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "501321100341226"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "643495372649567"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "670410520012837"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "898972030293554"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "910410555821206"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "955615084638299"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "1008221029329889"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "1014753008676428"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "1024599341033662"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "1718648064889757"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "1795239267188486"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "1839497672785722"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "1931177940505479"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "1936963843006626"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "2063273887328664"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "2100421890282669"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "2142509999304237"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "2142577795957193"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "2165220000379117"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "2166453986939743"}}}

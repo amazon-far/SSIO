@@ -1,0 +1,6 @@
+_target_: Loss.ssio.FixedDvLoss
+
+# Multi-scale Δv: steps 1 and 3 (equal weights).
+dv:
+  - [1, 1.0]
+  - [3, 1.0]

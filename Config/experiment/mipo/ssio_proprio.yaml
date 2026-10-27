@@ -1,0 +1,21 @@
+# @package _global_
+# Tab. III "Ours + Proprio", MIPO. HF stage1/zueppy3z,
+# 0.1455 / 0.82 AVE (m/s) / ATE (m) on MIPO_Test.
+#   python train_ssio.py +experiment=mipo/ssio_proprio
+defaults:
+  - override /dataset@train_dataset: MIPO_Train
+  - override /dataset@eval_dataset : MIPO_Valid
+  - override /network: airio_joints_imu_only
+  - override /loss   : ssio_dv_1_3_9
+
+modality:
+  use_aux_imu: true
+  use_joints : true
+
+train:
+  lr          : 5.0e-5
+  decay       : 1.0e-5
+  batch       : 256
+  epoch       : 240
+  regularization_gate   : imu
+  regularization_weight : 0.01

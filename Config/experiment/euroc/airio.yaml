@@ -1,0 +1,17 @@
+# @package _global_
+# Tab. II "AirIO†" (supervised), EuRoC. HF supervised/ncntl12t,
+# 0.3444 / 3.72 AVE (m/s) / ATE (m) on EuRoC_Test. For the "AirIO" row add network=airio
+# (HF supervised/n50vs978).
+#   python train_ssio.py +experiment=euroc/airio
+defaults:
+  - override /dataset@train_dataset: EuRoC_Train_Randomized
+  - override /dataset@eval_dataset : EuRoC_Valid
+  - override /network: airio_imu_only
+  - override /loss   : supervised_only
+
+train:
+  lr         : 1.0e-3
+  decay      : 1.0e-3
+  batch      : 64
+  epoch      : 150
+  regularization_weight: 0.0

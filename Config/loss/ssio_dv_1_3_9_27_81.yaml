@@ -1,0 +1,11 @@
+_target_: Loss.ssio.FixedDvLoss
+
+# Multi-scale Δv: steps 1, 3, 9, 27, 81 (equal weights). With the airio network's
+# 9-sample anchor stride at 200 Hz these are ~45/135/405/1215/3645 ms horizons —
+# the GrandTour integration self-supervision setting (paper Tab. VI, 3.65 s).
+dv:
+  - [1, 1.0]
+  - [3, 1.0]
+  - [9, 1.0]
+  - [27, 1.0]
+  - [81, 1.0]

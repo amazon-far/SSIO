@@ -1,0 +1,17 @@
+# @package _global_
+# Tab. II "Ours", Humanoid. HF stage1/rt7jor4e,
+# 0.1669 / 4.36 AVE (m/s) / ATE (m) on HumanoidOdom_Test. Longest Δv horizon 1.22 s (Tab. VI).
+#   python train_ssio.py +experiment=humanoid/ssio
+defaults:
+  - override /dataset@train_dataset: HumanoidOdom_Train
+  - override /dataset@eval_dataset : HumanoidOdom_Valid
+  - override /network: airio_imu_only
+  - override /loss   : ssio_dv_1_3_9_27
+
+train:
+  lr         : 1.0e-3
+  decay      : 1.0e-3
+  batch      : 512
+  epoch      : 50
+  regularization_gate  : imu
+  regularization_weight: 1.0

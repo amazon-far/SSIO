@@ -1,0 +1,56 @@
+# TLIO_Valid.yaml -- one SlidingWindow(TLIO_Sequence(...)) per valid sequence.
+# Everything except seq.config.seq_name is shared via YAML anchors.
+
+_outer: &outer
+  _target_: Sequence.SlidingWindow.SlidingWindow
+  config:
+    window_size : ${train.window}
+    step_size   : ${train.window}
+
+_inner: &inner
+  _target_: Sequence.TLIO.TLIO_Sequence
+
+_inner_config: &inner_config
+  data_root  : ${host_env:DATA_ROOT}/TLIO
+  device     : ${meta.device}
+  dtype      : ${meta.dtype}
+  acc_sigma  : 0.01
+  gyro_sigma : 0.01
+
+
+sequences:
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "175729529774207"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "177568983090293"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "178577832990152"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "181717792538459"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "203347623516637"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "225800518293160"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "244090216144221"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "249396005780014"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "254893955247638"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "273284860076442"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "309916083143792"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "313472039429513"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "326818981183534"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "344931662710357"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "471365173360928"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "479280389232627"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "555116858217612"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "598898490508449"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "656164344732269"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "864845503722445"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "985482624973242"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "1078680618948414"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "1502425973192089"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "1525633960899208"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "1687788628006357"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "1697857583646075"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "1826921427346163"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "1843664699074684"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "1951840265116479"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "1969082553401908"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "2015216431883514"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "2046520358743583"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "2106110069666399"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "2200448940233752"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "2246760938933792"}}}

@@ -1,0 +1,49 @@
+defaults:
+  - dataset@train_dataset : TLIO_Train_Randomized
+  - dataset@eval_dataset  : TLIO_Valid
+  - network  : airio_imu_only
+  - optimizer: adamw
+  - scheduler: constant
+  - loss     : ssio_variance
+  - _self_
+
+modality:
+  use_aux_imu: true
+  use_joints : true
+
+train:
+  lr    : 0.001
+  decay : 0.001
+  batch : 512
+  epoch : 128
+  window: 1024
+  ema   : true
+  gravity: 9.81007         # z-up world, pypose sign convention; correct for TLIO/EuRoC *and* HumanoidOdom (native z-up)
+  num_workers: 0           # train-loader workers; >0 requires a CPU-resident train dataset
+  checkpoint_every_epochs: 10
+  eval_plot_every_epochs: 10   # figure cadence only; eval metrics still log every epoch
+  data_ratio: 1.0          # fraction of train windows kept (1.0 = all); seeded global subset for data-scaling studies
+  max_train_steps: null    # hard cap on training steps (null = run the full train.epoch schedule)
+  regularization_weight: 0.0         # gated velocity penalty; 0 disables (see README)
+  regularization_gate: all           # all, imu, or gt
+  regularization_speed_max: 0.02     # gate=gt threshold [m/s]
+  regularization_sched_enable: false
+  regularization_sched_start: null
+  regularization_sched_end: null
+  dv_imu_input: corrected       # corrected or raw
+  resume_from:
+
+meta:
+  device: ${as_device:'cuda:0'}
+  dtype : ${as_dtype:'fp32'}
+
+wandb:
+  project: SSIO
+  mode   : disabled       # online | offline | disabled — set online to log to W&B
+  name   : null
+
+hydra:
+  job:
+    chdir: false
+  run:
+    dir: ${host_env:EXP_DIR,./experiments}/train_ssio/${hydra:runtime.choices.dataset@train_dataset}/${now:%Y%m%d_%H%M%S}

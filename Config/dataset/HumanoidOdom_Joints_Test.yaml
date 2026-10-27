@@ -1,0 +1,31 @@
+# HumanoidOdom_Joints_Test.yaml — HumanoidOdom_Test with the G1's 29 joint states.
+#
+# Joints are read from each clip's joints.npy (aligned 1:1 with time_ns.npy).
+#
+# Unitree G1: 29 joints, channels q / dq / tau_est -> position / velocity / effort
+# (ddq is all-zero and skipped). Pair with network=airio_joints_imu_only_humanoid.
+
+_outer: &outer
+  _target_: Sequence.SlidingWindow.SlidingWindow
+  config:
+    window_size : ${train.window}
+    step_size   : ${train.window}
+
+_inner: &inner
+  _target_: Sequence.HumanoidOdom.HumanoidOdom
+
+_inner_config: &inner_config
+  data_root  : ${host_env:DATA_ROOT}/humanoid_g1
+  device     : ${meta.device}
+  dtype      : ${meta.dtype}
+  part       : pelvis
+  joints     : true
+  debias     : true
+  calibrater :          # static frames from IMU statistics, no GT speed (Doc/debias.md)
+    kind     : imu
+  acc_sigma  : 0.01
+  gyro_sigma : 0.01
+  gravity    : ${train.gravity}   # keep debias and preintegration on one value
+
+sequences:
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "10871_humanoid_20260520_223451"}}}

@@ -1,0 +1,20 @@
+# @package _global_
+# Tab. III "AirIO† + Proprio" (supervised), Humanoid. HF supervised/lo9hemti,
+# 0.0953 / 2.35 AVE (m/s) / ATE (m) on HumanoidOdom_Joints_Test.
+#   python train_ssio.py +experiment=humanoid/airio_proprio
+defaults:
+  - override /dataset@train_dataset: HumanoidOdom_Joints_Train
+  - override /dataset@eval_dataset : HumanoidOdom_Joints_Valid
+  - override /network: airio_joints_imu_only_humanoid
+  - override /loss   : supervised_only
+
+modality:
+  use_aux_imu: true
+  use_joints : true
+
+train:
+  lr         : 1.0e-3
+  decay      : 1.0e-3
+  batch      : 512
+  epoch      : 128
+  regularization_weight: 0.0

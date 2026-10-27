@@ -1,0 +1,17 @@
+# @package _global_
+# Tab. II "Ours (w/ PGD)", Blackbird. HF stage2b/mks34gjg, fine-tuned from stage1/fpza91ml,
+# 0.4290 / 17.73 AVE (m/s) / ATE (m) on BlackBird_Test.
+#   python train_pgd.py +experiment=blackbird/ssio_pgd train.resume_from=file:<SSIO_RUN>/best_model.pt
+defaults:
+  - override /dataset@train_dataset: BlackBird_Train_Randomized
+  - override /dataset@eval_dataset : BlackBird_Valid
+  - override /network: airio_imu_only
+  - override /loss   : adapt_mse
+  - override /graph  : sparse_imupgo
+
+train:
+  network_factor_sigma: 2.0
+  lr   : 5.0e-5
+  decay: 1.0e-3
+  batch: 512
+  epoch: 30

@@ -1,0 +1,22 @@
+# Tested with torch 2.5.1 + pypose 0.6.8. torch 2.14 breaks pypose cumops
+# (empty torch.arange now raises), failing IMU preintegration.
+huggingface_hub[cli]    # CLI tooling
+torch<2.14
+pypose
+numpy<2
+scipy
+matplotlib
+hydra-core
+omegaconf
+jaxtyping
+beartype
+wandb
+rich
+h5py        # MIPO loader
+zarr        # ANYmal (GrandTour) loader
+warp-lang   # Sparse_IMUPGOGraph (CUDA only)
+# Sparse_IMUPGOGraph's cuDSS direct solver (CUDA only). cu13 wheels assume CUDA 13.x;
+# on CUDA 12.x use nvidia-cudss-cu12 and nvmath-python[cu12].
+nvidia-cudss-cu13; sys_platform == "linux"
+nvmath-python[cu13]; sys_platform == "linux"
+pytest

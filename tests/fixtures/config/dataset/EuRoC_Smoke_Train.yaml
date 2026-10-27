@@ -1,0 +1,44 @@
+# EuRoC_Smoke_Train.yaml — RandomWindow over the committed 10 s EuRoC fixture.
+#
+# Test-only, which is why it lives here and not in the repo-root Config/dataset/:
+# it is the train half of the closed-loop suite (../../closedloop/) and the only
+# dataset group that runs with no $DATA_ROOT and no network access. Pair it with
+# EuRoC_Smoke_Valid.
+#
+# Reached as a normal Hydra group (``dataset@train_dataset=EuRoC_Smoke_Train``) by
+# putting this directory's parent on the searchpath — ../../closedloop/conftest.py
+# appends it, and the repo-root README's Quick Start section shows the CLI form.
+#
+# The fixture is MH_02_easy's first 10 s, 2000 IMU rows, committed under
+# ../../euroc_mh02_10s (provenance in its PROVENANCE.txt). At the default
+# train.window=1024 that makes RandomWindow's epoch (2000 // 1024) * 10 = 10 windows,
+# so a small train.batch really does take several steps per epoch.
+#
+# debias stays false: the first 10 s of MH_02_easy holds no GT-static frame, so
+# StaticSpanDebias would only decline (skipped_no_static) and hand the IMU back
+# untouched. Off, there is no corrected_* at all, so the smoke run has to name its Δv
+# stream (train.dv_imu_input=raw). The EuRoC groups in Config/dataset/ ship true.
+#
+# data_root goes through ${host_env:SSIO_ROOT}, which falls back to the repo root
+# computed in Interface/__init__.py — so this resolves in any checkout with nothing exported.
+
+_outer: &outer
+  _target_: Sequence.RandomWindow.RandomWindow
+  config:
+    window_size :  ${train.window}
+
+_inner: &inner
+  _target_: Sequence.EuRoC.EuRoC_Sequence
+
+_inner_config: &inner_config
+  data_root  : ${host_env:SSIO_ROOT}/tests/fixtures/euroc_mh02_10s
+  device     : ${meta.device}
+  dtype      : ${meta.dtype}
+  acc_sigma  : 0.01
+  gyro_sigma : 0.01
+  debias     : false   # no GT-static frame in the fixture; see header
+  calibrater : null
+  gravity    : 9.81007
+
+sequences:
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "MH_02_easy"}}}

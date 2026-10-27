@@ -1,0 +1,17 @@
+# @package _global_
+# Tab. II "Ours (w/ PGD)", Humanoid. HF stage2b/r0vtbp2o, fine-tuned from stage1/rt7jor4e,
+# 0.1549 / 4.38 AVE (m/s) / ATE (m) on HumanoidOdom_Test.
+#   python train_pgd.py +experiment=humanoid/ssio_pgd train.resume_from=file:<SSIO_RUN>/best_model.pt
+defaults:
+  - override /dataset@train_dataset: HumanoidOdom_Train
+  - override /dataset@eval_dataset : HumanoidOdom_Valid
+  - override /network: airio_imu_only
+  - override /loss   : adapt_mse
+  - override /graph  : sparse_imupgo
+
+train:
+  network_factor_sigma: 0.2
+  lr   : 5.0e-5
+  decay: 1.0e-3
+  batch: 512
+  epoch: 50

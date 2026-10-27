@@ -1,0 +1,24 @@
+# @package _global_
+# Tab. II "AirIO†" (supervised), MIPO. HF supervised/huamd5dg,
+# 0.1209 / 0.31 AVE (m/s) / ATE (m) on MIPO_Test. For the "AirIO" row add network=airio
+# (HF supervised/vqbya7lg).
+#   python train_ssio.py +experiment=mipo/airio
+defaults:
+  - override /dataset@train_dataset: MIPO_Train
+  - override /dataset@eval_dataset : MIPO_Valid
+  - override /network: airio_imu_only
+  - override /loss   : supervised_only
+
+network:
+  num_imus: 1
+
+modality:
+  use_aux_imu: false
+  use_joints : false
+
+train:
+  lr          : 1.0e-3
+  decay       : 1.0e-3
+  batch       : 256
+  epoch       : 128
+  regularization_weight : 0.0

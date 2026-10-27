@@ -1,0 +1,14 @@
+EuRoC smoke-test fixture — rows copied verbatim, no reformatting.
+source_dataset  : EuRoC MAV (ETH Zurich), https://doi.org/10.3929/ethz-b-000690084
+license         : In Copyright - Non-Commercial Use Permitted; not covered by SSIO's MIT License
+citation        : Burri et al., "The EuRoC micro aerial vehicle datasets", IJRR 35(10), 2016
+source_sequence : MH_02_easy
+generator       : Scripts/make_smoke_fixture.py
+start_sec       : 0.0   (after the first GT sample)
+duration_sec    : 10.0
+gt_margin_sec   : 0.5
+imu_rows        : 2000 (source rows [181, 2181))
+imu_t_ns        : [1403636859536666624, 1403636869531666432]
+gt_rows         : 2100 (source rows [0, 2100))
+gt_t_ns         : [1403636859536666368, 1403636870031666432]
+Regenerate with: PYTHONPATH=. python Scripts/make_smoke_fixture.py

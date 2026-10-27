@@ -1,0 +1,18 @@
+# @package _global_
+# Tab. II "Ours", TLIO. HF stage1/ev7hukzs,
+# 0.1038 / 3.04 AVE (m/s) / ATE (m) on TLIO_Test. Longest Δv horizon 5.12 s, the whole window (Tab. VI).
+#   python train_ssio.py +experiment=tlio/ssio
+defaults:
+  - override /dataset@train_dataset: TLIO_Train_Randomized
+  - override /dataset@eval_dataset : TLIO_Valid
+  - override /network: airio_imu_only
+  - override /loss   : ssio_variance
+
+train:
+  lr          : 1.0e-3
+  decay       : 1.0e-3
+  batch       : 512
+  epoch       : 40
+  regularization_gate   : imu
+  regularization_weight : 0.25
+  dv_imu_input: raw   # TLIO ships bias-compensated IMU; no corrected stream

@@ -1,0 +1,44 @@
+# ANYmal GrandTour VAL (4). GT velocity is the GT source's
+# filtered twist_lin, rotated to world in the loader. GNSS missions use gt_source=cpt7_ie; indoor pool missions use
+# gt_source=state_estimator (leg-inertial, pool-only).
+# Train / Val / Test match the pools of the Open-IO/SSIO checkpoints.
+_outer: &outer
+  _target_: Sequence.SlidingWindow.SlidingWindow
+  config:
+    window_size: ${train.window}
+    step_size: ${train.window}
+_inner: &inner
+  _target_: Sequence.ANYmal.ANYmal_Sequence
+_icg: &icg
+  data_root: ${host_env:DATA_ROOT}/grand_tour
+  device: ${meta.device}
+  dtype: ${meta.dtype}
+  acc_sigma: 0.1
+  gyro_sigma: 0.0316227766
+  num_imus: 1
+  num_joints: 12
+  target_rate: 200.0
+  gt_source: cpt7_ie
+  debias: true            # IMU-only static detector, no GT speed (Doc/debias.md)
+  calibrater: {kind: imu, gyro_mean_max: 0.005}
+  gravity: ${train.gravity}
+  imu_gt_offsets_json: ${host_env:DATA_ROOT}/grand_tour/anymal_imu_gt_offsets_per_imu.json
+_ici: &ici
+  data_root: ${host_env:DATA_ROOT}/grand_tour
+  device: ${meta.device}
+  dtype: ${meta.dtype}
+  acc_sigma: 0.1
+  gyro_sigma: 0.0316227766
+  num_imus: 1
+  num_joints: 12
+  target_rate: 200.0
+  gt_source: state_estimator
+  debias: true            # IMU-only static detector, no GT speed (Doc/debias.md)
+  calibrater: {kind: imu, gyro_mean_max: 0.005}
+  gravity: ${train.gravity}
+
+sequences:
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *icg, seq_name: "2024-11-15-10-16-35"}}}  # TRIM-1  gnss
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *icg, seq_name: "2024-11-15-16-41-14"}}}  # LEE-1  gnss
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *icg, seq_name: "2024-11-11-12-42-47"}}}  # PIL-2  gnss
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *icg, seq_name: "2024-11-03-07-52-45"}}}  # SNOW-1  gnss

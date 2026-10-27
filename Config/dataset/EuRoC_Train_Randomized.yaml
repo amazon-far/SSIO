@@ -1,0 +1,29 @@
+# EuRoC_Train_Randomized.yaml — RandomWindow(EuRoC_Sequence) per train sequence.
+# acc_sigma / gyro_sigma = sqrt(acc_cov), sqrt(gyro_cov) for diagonal [3,3] covariances (TLIO-style).
+
+_outer: &outer
+  _target_: Sequence.RandomWindow.RandomWindow
+  config:
+    window_size :  ${train.window}
+
+_inner: &inner
+  _target_: Sequence.EuRoC.EuRoC_Sequence
+
+_inner_config: &inner_config
+  data_root: ${host_env:DATA_ROOT}/EuRoC
+  device: ${meta.device}
+  dtype: ${meta.dtype}
+  acc_sigma  : 0.01
+  gyro_sigma : 0.01
+  debias     : true
+  calibrater :          # static frames from IMU statistics, no GT speed (Doc/debias.md)
+    kind     : imu
+  gravity: 9.81007
+
+sequences:
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "V1_02_medium"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "V2_01_easy"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "V2_03_difficult"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "MH_03_medium"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "MH_05_difficult"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "MH_01_easy"}}}

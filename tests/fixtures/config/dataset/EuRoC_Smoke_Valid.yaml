@@ -1,0 +1,33 @@
+# EuRoC_Smoke_Valid.yaml — SlidingWindow eval over the committed 10 s EuRoC fixture.
+#
+# Eval half of the closed-loop suite (../../closedloop/); see EuRoC_Smoke_Train.yaml
+# for the fixture's provenance, why this is test-only rather than a repo-root dataset
+# group, and why debias is false.
+#
+# step_size == window_size (the EuRoC_Valid convention), so at the default
+# train.window=1024 the 2000-frame fixture yields exactly one 1024-frame window.
+# 1024 frames at EuRoC's 200 Hz is 5.12 s, which is *shorter than 10 s on purpose*:
+# it is what makes evaluate.py's 10 s ΔV horizon come back NaN, the one
+# structurally-impossible case ../../closedloop/test_eval_closed_loop.py pins down.
+
+_outer: &outer
+  _target_: Sequence.SlidingWindow.SlidingWindow
+  config:
+    window_size :  ${train.window}
+    step_size   :  ${train.window}
+
+_inner: &inner
+  _target_: Sequence.EuRoC.EuRoC_Sequence
+
+_inner_config: &inner_config
+  data_root  : ${host_env:SSIO_ROOT}/tests/fixtures/euroc_mh02_10s
+  device     : ${meta.device}
+  dtype      : ${meta.dtype}
+  acc_sigma  : 0.01
+  gyro_sigma : 0.01
+  debias     : false   # no GT-static frame in the fixture; see EuRoC_Smoke_Train.yaml
+  calibrater : null
+  gravity    : 9.81007
+
+sequences:
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "MH_02_easy"}}}

@@ -1,0 +1,18 @@
+# @package _global_
+# Tab. II "AirIO†" (supervised), TLIO. HF supervised/8pr646j5,
+# 0.0840 / 2.08 AVE (m/s) / ATE (m) on TLIO_Test. For the "AirIO" row add network=airio
+# (HF supervised/q1k41m3r).
+#   python train_ssio.py +experiment=tlio/airio
+defaults:
+  - override /dataset@train_dataset: TLIO_Train_Randomized
+  - override /dataset@eval_dataset : TLIO_Valid
+  - override /network: airio_imu_only
+  - override /loss   : supervised_only
+
+train:
+  lr          : 1.0e-3
+  decay       : 1.0e-3
+  batch       : 512
+  epoch       : 40
+  regularization_weight : 0.0
+  dv_imu_input: raw   # TLIO ships bias-compensated IMU; no corrected stream

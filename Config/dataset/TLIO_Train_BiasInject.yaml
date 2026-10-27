@@ -1,0 +1,328 @@
+# TLIO_Train_BiasInject.yaml -- one Bias(RandomWindow(TLIO_Sequence(...))) per train sequence.
+# Same train split / inner config as TLIO_Train_Randomized.yaml, with an extra
+# constant-bias augmentation layer wrapped *on top of* the RandomWindow.
+# Bias is added to the raw acc / gyro streams only (same units as the channels:
+# m/s^2 for acc, rad/s for gyro). Everything except seq.config.seq_name is shared
+# via YAML anchors.
+#
+# The knobs below are bias *magnitudes*: Sequence.Bias draws one random direction
+# per sequence instance and scales it to that norm, so the offset is constant
+# along a sequence. They are hoisted to the top level so they can be overridden
+# directly from the Hydra CLI. This file is composed at the
+# `train_dataset` mount point (`dataset@train_dataset` in Config/train_*.yaml),
+# so override them as:
+#
+#   python train_ssio.py dataset@train_dataset=TLIO_Train_BiasInject \
+#       train_dataset.acc_bias=0.1 train_dataset.gyro_bias=0.01
+#
+# Both default to 0 (no-op augmentation); set them on the CLI to inject bias.
+
+acc_bias : 0.0   # accelerometer bias magnitude [m/s^2]; override on the CLI
+gyro_bias: 0.0   # gyroscope     bias magnitude [rad/s]; override on the CLI
+
+_noise: &noise
+  _target_: Sequence.Bias.Bias
+  config:
+    acc_bias  : ${train_dataset.acc_bias}
+    gyro_bias : ${train_dataset.gyro_bias}
+
+_window: &window
+  _target_: Sequence.RandomWindow.RandomWindow
+  config:
+    window_size : ${train.window}
+
+_inner: &inner
+  _target_: Sequence.TLIO.TLIO_Sequence
+
+_inner_config: &inner_config
+  data_root  : ${host_env:DATA_ROOT}/TLIO
+  device     : ${meta.device}
+  dtype      : ${meta.dtype}
+  acc_sigma  : 0.01
+  gyro_sigma : 0.01
+
+
+sequences:
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "110982076486017"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "137102747096458"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "137757803662107"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "142205126653700"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "144788436387220"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "148313022698476"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "151906702337043"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "153415092184931"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "159087918361150"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "159809171378917"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "170899227130924"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "173422010020373"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "174944149865638"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "175814796595035"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "177099999646982"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "177271779632328"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "178481726332829"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "178766769632472"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "180327282813538"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "180618552655407"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "181980212494019"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "183021975741183"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "183235705723693"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "183313009178246"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "183514802503430"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "185393705495692"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "186422668691061"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "187060525471940"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "191006331605837"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "194006901252838"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "197194824451525"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "199449780892286"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "201672307146275"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "202632990569294"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "204789383499240"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "206177536862294"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "206586463503230"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "206984540025479"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "211377916252816"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "212892589322397"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "213866205895545"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "214078789388753"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "214500619346771"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "216024005672627"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "216675408946004"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "217995235471413"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "218329898777280"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "219273888800642"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "220587792001869"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "220702031859866"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "223957128216501"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "227510924524449"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "232571644105129"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "232914284053409"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "233819257293750"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "233929350704306"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "234781730535787"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "234917043856503"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "235974973742781"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "236842090334013"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "239522353394313"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "240905543242042"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "241518573209930"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "241606593279794"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "242278109965859"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "244403692982726"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "247387142688203"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "247418095811976"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "249057315955347"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "249246492306263"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "252393038830012"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "253159831907410"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "255100285195542"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "255440348337240"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "258772411647271"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "258830751347976"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "260140517868983"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "262095354411409"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "263131344430229"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "264593347507584"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "273205793403065"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "278743852967446"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "281492702411216"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "283015479201305"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "283612465580242"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "283801585494713"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "288754474999503"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "289121508357014"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "290398118226413"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "291237701714275"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "293638334810125"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "296883837769733"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "297630084363793"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "308063573317258"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "308365659757530"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "308691706335906"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "311961762715673"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "312125032701948"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "313874096056086"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "314111426032770"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "314688785752136"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "315210329033243"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "320897632001904"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "321835121706293"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "322244864990513"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "322687581840578"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "325674671298318"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "329295474484338"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "333614150739207"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "335745203839619"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "336158470488467"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "339212646649141"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "340484083360296"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "344604589401698"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "360145664525832"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "360770204445616"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "368823013640377"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "380164865892065"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "385915495241998"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "387935835060549"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "394174284430856"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "395895884253666"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "396278524204344"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "396634770816386"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "397157327453493"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "397812234053716"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "399702083848716"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "400052823860790"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "400349747140686"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "406361579772961"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "407198399690538"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "407482562993340"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "411204512715412"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "412999689179780"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "419060135292223"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "429371700923189"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "431655883928014"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "433097980495445"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "441328419667446"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "453094225115113"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "453528795093790"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "461265100982031"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "466652040457332"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "467106657072642"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "470089033444391"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "480770639010144"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "486958458473336"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "487369381911326"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "490761631408385"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "496072817492636"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "508064246333280"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "508743996262115"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "518832795231292"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "522301668240659"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "523512191443344"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "538097076616516"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "544387339332670"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "544792582629318"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "548083062313767"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "548773022228569"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "560945757695558"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "569629456799259"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "579961112398553"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "591570041214843"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "599336133774124"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "612926992405323"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "614178558951566"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "618089855222021"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "624569231226471"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "639127009755676"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "644791665868232"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "645060325839804"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "656803608046260"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "687428001632171"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "696837714012501"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "697631693927504"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "698073493890712"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "708793149458860"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "709069206092836"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "747995398924210"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "812267285643001"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "827938664068086"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "841161219407636"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "843819422476591"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "864853400371280"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "883983968475391"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "887726401419269"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "898618183653763"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "902754549897515"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "971945506346908"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "983795435117367"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "992577124233580"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "998764646976890"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "1061397214065552"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "1063304483833738"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "1122718257881491"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "1124057587736236"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "1181699808634375"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "1198315403643276"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "1237525139717695"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "1263909867077823"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "1426592494152929"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "1488067567991708"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "1518393548269327"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "1550004588439257"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "1585593578232757"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "1663305670432966"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "1665354546913958"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "1695693057206282"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "1698087453644386"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "1701333893314862"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "1709537415833584"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "1709847209051326"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "1710110305709796"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "1712001452216307"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "1726898184057902"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "1732737526772563"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "1736824643102205"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "1750753748367287"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "1804414336532446"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "1807125206007404"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "1825530650825953"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "1828669440550751"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "1834121153307717"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "1844932992477345"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "1863275357097003"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "1884755498499280"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "1897064490314938"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "1897886920503721"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "1907862455938329"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "1908720219163387"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "1912322989063788"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "1937646719869698"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "1990397187698502"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "1992058487774563"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "1999700560343994"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "2012148812203579"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "2015502361795366"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "2015607748755669"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "2034027783581311"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "2034137466605935"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "2036011336651047"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "2042683285993623"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "2044094842567928"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "2046671272326026"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "2057303611184189"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "2057712284468014"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "2064460340495411"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "2066438670291580"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "2066716600217952"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "2067706456873167"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "2067880670191660"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "2071339043144852"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "2075821782451995"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "2077007562567374"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "2078835822358973"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "2079516095645193"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "2109402839307260"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "2123576317684812"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "2133975923526941"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "2135016946812445"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "2147075558879374"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "2149067815413723"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "2154722178095332"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "2155432657865133"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "2173873602837627"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "2174410092814840"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "2184296651788822"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "2188622591189951"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "2198915583516767"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "2200877040234922"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "2224042907609895"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "2225704527456023"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "2248731132017439"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "2255256234792546"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "2280739285490616"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "2295836833760574"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "2320103568006940"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "2346450392095315"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "2378886872127144"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "2515549922059594"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "2690880641137421"}}}}
+  - {<<: *noise, seq: {<<: *window, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "2747703168661725"}}}}

@@ -1,0 +1,55 @@
+_target_: Model.airio.JointsAirIONetworkIMUOnly
+
+# Multi-IMU + proprioceptive-joints AirIO velocity network with NO orientation
+# input — the joints twin of airio_imu_only.yaml, and the "+ Proprio" student of
+# paper Tab. III. Defaults below are for the MIPO Go1 with 5 IMUs, 16 joints.
+#
+# fusion_mlp[0] takes imu_encoder_channels[-1] + joint_encoder_channels[-1] (128).
+# `Input.rot` is still accepted and ignored, so no caller changes are needed.
+#
+# NOTE: the trainer/evaluator still rotates the predicted body velocity into world
+# frame with GT attitude. This config removes attitude from the *network input*
+# only; orientation wrappers do not change the metric's GT world lift.
+#
+# An airio_imu_only checkpoint loads with strict=False to warm-start everything
+# but joint_encoder / fusion_mlp.
+
+# CNN encoder layout — shared by the IMU and joint encoders so both features have
+# the same temporal downsampling. Keep identical to airio_imu_only.yaml so the
+# anchor grid (start_index=13, stride=9) matches and results stay comparable.
+k_list: [7, 7]
+s_list: [3, 3]
+p_list: [3, 3]
+
+num_imus:   5
+num_joints: 16
+
+# Per-joint measurements the joint stem consumes; joint input dim becomes
+# len(joint_channels) * num_joints. MIPO Go1 measures joint torque, so all three are used.
+joint_channels: [position, velocity, effort]
+
+# Per-Conv1d-block output channel widths for each encoder stream. The input
+# dim is computed so NOT included.
+#   IMU input dim   = 6 * num_imus   (acc + gyro per IMU, flattened)
+#   joint input dim = len(joint_channels) * num_joints
+imu_encoder_channels:   [32, 64]
+joint_encoder_channels: [32, 64]
+
+# Conv encoder fusion MLP
+fusion_dim:    64
+fusion_hidden: 128
+
+# GRU stack (gru2 input is gru1_hidden).
+gru1_hidden: 64
+gru2_hidden: 128
+bidirectional: true
+
+# Hidden width shared by both decoder heads.
+decoder_hidden: 128
+
+# Which IMU stream the network reads (`Model/airio.py::select_imu`):
+#   raw       -> acc / gyro                     as measured by the sensor
+#   corrected -> corrected_acc / corrected_gyro  bias-calibration output
+# Required: there is no constructor default, and the Delta-v reference selects its
+# own stream via `train.dv_imu_input`.
+imu_input: raw

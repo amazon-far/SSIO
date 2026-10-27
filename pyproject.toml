@@ -1,0 +1,27 @@
+[tool.pytest.ini_options]
+testpaths = ["./tests"]
+pythonpath = ["."]
+# ---------------------------------------------------------------------------
+# Two test projects, split by directory and, for closedloop, equivalently by
+# marker; the canonical commands are in README.md "Testing".
+#
+#   unit        tests/*.py            (flat, unmarked)  — cross-implementation and
+#                                     whole-class tests that need no fixture data
+#   closedloop  tests/closedloop/     @pytest.mark.closedloop
+#
+# If ROS is sourced, run with PYTEST_DISABLE_PLUGIN_AUTOLOAD=1: its launch_testing
+# entry points break collection, and `-p no:<plugin>` is too late to stop it.
+# ---------------------------------------------------------------------------
+markers = [
+    "closedloop: drives the real train/eval entrypoints by importing their module and functions",
+]
+
+
+[tool.pyright]
+typeCheckingMode = "standard"
+reportImportCycles = "none"                 # Sometime we have to have import cycle to annotate type
+reportDuplicateImport = "error"             # Bad practice.
+reportAbstractUsage = "error"               # Will crash on runtime.
+reportMatchNotExhaustive = "error"          # Bad practice.
+reportPrivateImportUsage = "information"    # PyTorch (specifically torch.optim) problem
+reportMissingImports = "warning"            # Some module (e.g. Zed SDK) is optional for user.

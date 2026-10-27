@@ -1,0 +1,11 @@
+# Supervised AirIO baseline (the AirIO† rows). Trains on GT velocity: per-anchor
+# Huber velocity loss plus the covariance NLL, with the AirIO settings — Huber
+# delta 0.005, velocity weight 100, covariance weight 1e-4 inside that weighted
+# term, covaug on.
+_target_: Loss.ssio.SupervisedVelocityLoss
+vel_weight : 100.0
+vel_loss   : Huber
+huber_delta: 0.005
+cov_weight : 1.0e-2       # 100 * AirIO covariance weight (1e-4)
+covaug     : true         # residual not detached: the NLL also trains the velocity head
+cov_floor  : 1.0e-6

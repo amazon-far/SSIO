@@ -1,0 +1,47 @@
+# ANYmal GrandTour TEST (7, held out). GT velocity is the GT source's
+# filtered twist_lin, rotated to world in the loader. GNSS missions use gt_source=cpt7_ie; indoor pool missions use
+# gt_source=state_estimator (leg-inertial, pool-only).
+# Train / Val / Test match the pools of the Open-IO/SSIO checkpoints.
+_outer: &outer
+  _target_: Sequence.SlidingWindow.SlidingWindow
+  config:
+    window_size: ${train.window}
+    step_size: ${train.window}
+_inner: &inner
+  _target_: Sequence.ANYmal.ANYmal_Sequence
+_icg: &icg
+  data_root: ${host_env:DATA_ROOT}/grand_tour
+  device: ${meta.device}
+  dtype: ${meta.dtype}
+  acc_sigma: 0.1
+  gyro_sigma: 0.0316227766
+  num_imus: 1
+  num_joints: 12
+  target_rate: 200.0
+  gt_source: cpt7_ie
+  debias: true            # IMU-only static detector, no GT speed (Doc/debias.md)
+  calibrater: {kind: imu, gyro_mean_max: 0.005}
+  gravity: ${train.gravity}
+  imu_gt_offsets_json: ${host_env:DATA_ROOT}/grand_tour/anymal_imu_gt_offsets_per_imu.json
+_ici: &ici
+  data_root: ${host_env:DATA_ROOT}/grand_tour
+  device: ${meta.device}
+  dtype: ${meta.dtype}
+  acc_sigma: 0.1
+  gyro_sigma: 0.0316227766
+  num_imus: 1
+  num_joints: 12
+  target_rate: 200.0
+  gt_source: state_estimator
+  debias: true            # IMU-only static detector, no GT speed (Doc/debias.md)
+  calibrater: {kind: imu, gyro_mean_max: 0.005}
+  gravity: ${train.gravity}
+
+sequences:
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *icg, seq_name: "2024-10-01-11-29-55"}}}  # ETH-1  gnss
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *icg, seq_name: "2024-10-01-12-00-49"}}}  # ETH-3  gnss
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *icg, seq_name: "2024-11-04-10-57-34"}}}  # GRI-1  gnss
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *icg, seq_name: "2024-11-03-13-51-43"}}}  # EIG-1  gnss
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *icg, seq_name: "2024-11-14-13-45-37"}}}  # HEAP-1  gnss
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *icg, seq_name: "2024-11-02-21-12-51"}}}  # ICE-1  gnss
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *icg, seq_name: "2024-11-03-07-57-34"}}}  # SNOW-2  gnss

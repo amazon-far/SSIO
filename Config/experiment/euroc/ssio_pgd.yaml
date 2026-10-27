@@ -1,0 +1,17 @@
+# @package _global_
+# Tab. II "Ours (w/ PGD)", EuRoC. HF stage2b/u0ej57z3, fine-tuned from stage1/189uubgg,
+# 0.4031 / 9.93 AVE (m/s) / ATE (m) on EuRoC_Test.
+#   python train_pgd.py +experiment=euroc/ssio_pgd train.resume_from=file:<SSIO_RUN>/best_model.pt
+defaults:
+  - override /dataset@train_dataset: EuRoC_Train_Randomized
+  - override /dataset@eval_dataset : EuRoC_Valid
+  - override /network: airio_imu_only
+  - override /loss   : adapt_mse
+  - override /graph  : sparse_imupgo
+
+train:
+  network_factor_sigma: 1.0
+  lr   : 5.0e-5
+  decay: 1.0e-3
+  batch: 512
+  epoch: 150

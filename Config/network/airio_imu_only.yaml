@@ -1,0 +1,42 @@
+# AirIO twin with NO orientation input — the control for the attitude prior.
+#
+# Identical to network=airio except the ori_encoder branch is gone, so `fcn2`
+# takes imu_encoder_channels[-1] (64) instead of imu_encoder_channels[-1] +
+# ori_encoder_channels[-1] (128).
+# `Input.rot` is still accepted and ignored, so no caller changes are needed.
+#
+# NOTE: the trainer/evaluator still rotates the predicted body velocity into world
+# frame with GT attitude. This config removes attitude from the *network input*
+# only; orientation wrappers do not change the metric's GT world lift.
+#
+# Checkpoints are not interchangeable with network=airio (no ori_encoder.* keys,
+# different fcn2 in-features).
+_target_: Model.airio.AirIONetworkIMUOnly
+
+# CNN encoder layout — keep identical to airio.yaml so the anchor grid
+# (start_index=13, stride=9) matches and results stay comparable.
+k_list: [7, 7]
+s_list: [3, 3]
+p_list: [3, 3]
+
+# Per-Conv1d-block output channel widths. The input dim is computed internally
+# (6*num_imus). Do NOT include the input dim here. Keep identical to airio.yaml.
+imu_encoder_channels: [32, 64]
+
+# Post-encoder fusion: Linear(imu_encoder_channels[-1], fusion_dim).
+fusion_dim: 64
+
+gru1_hidden: 64
+gru2_hidden: 128
+decoder_hidden: 128
+bidirectional: true
+
+# Number of physical IMUs in the stack. The K IMUs are flattened into the
+# Conv1d stem's channel dim (input dim = 6 * num_imus).
+num_imus: 1
+
+# Which IMU stream the network reads. `IMUData` splits the pair by content:
+#   raw       -> acc / gyro                     as measured by the sensor
+#   corrected -> corrected_acc / corrected_gyro bias-calibration output
+# The training recipe selects the Dv reference stream independently.
+imu_input: raw

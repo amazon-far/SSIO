@@ -1,0 +1,24 @@
+# @package _global_
+# Tab. II "Ours (w/ PGD)", MIPO. HF stage2b/6059c2fr, fine-tuned from stage1/lwr3ayev,
+# 0.1692 / 1.58 AVE (m/s) / ATE (m) on MIPO_Test.
+#   python train_pgd.py +experiment=mipo/ssio_pgd train.resume_from=file:<SSIO_RUN>/best_model.pt
+defaults:
+  - override /dataset@train_dataset: MIPO_Train
+  - override /dataset@eval_dataset : MIPO_Valid
+  - override /network: airio_imu_only
+  - override /loss   : adapt_mse
+  - override /graph  : sparse_imupgo
+
+network:
+  num_imus: 1
+
+modality:
+  use_aux_imu: false
+  use_joints : false
+
+train:
+  network_factor_sigma: 0.5
+  lr          : 5.0e-5
+  decay       : 1.0e-3
+  batch       : 512
+  epoch       : 100

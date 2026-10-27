@@ -1,0 +1,36 @@
+_target_: Model.airio.AirIONetwork
+
+# CNN encoder layout. Total temporal stride = prod(s_list); with [3, 3] = 9.
+# All three lists must have the same length (one entry per Conv1d block).
+k_list: [7, 7]
+s_list: [3, 3]
+p_list: [3, 3]
+
+# Per-Conv1d-block output channel widths for each encoder stream. The input
+# dim is computed internally: 6*num_imus for the IMU stream, 3 for the
+# orientation stream (so3 tangent). Do NOT include the input dim here.
+imu_encoder_channels: [32, 64]
+ori_encoder_channels: [32, 64]
+
+# Post-concat fusion: Linear(imu_encoder_channels[-1] + ori_encoder_channels[-1], fusion_dim).
+fusion_dim: 64
+
+# GRU stack; gru2 input is gru1_hidden (doubled when `bidirectional`).
+gru1_hidden: 64
+gru2_hidden: 128
+
+# Hidden width shared by both decoder heads
+decoder_hidden: 128
+
+# Use bidirectional GRU layer
+bidirectional: true
+
+# Number of physical IMUs in the stack. The K IMUs are flattened into the
+# Conv1d stem's channel dim (input dim = 6 * num_imus).
+num_imus: 1
+
+# Which IMU stream the network reads. `IMUData` splits the pair by content:
+#   raw       -> acc / gyro                     as measured by the sensor
+#   corrected -> corrected_acc / corrected_gyro bias-calibration output
+# The training recipe selects the Dv reference stream independently.
+imu_input: raw

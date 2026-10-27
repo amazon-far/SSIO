@@ -1,0 +1,12 @@
+_target_: Loss.ssio.FixedDvLoss
+
+# Multi-scale Δv: steps 1, 3, 9, 27 (equal weights). With the airio network's
+# 9-sample anchor stride at ~200 Hz these are ~44/132/396/1188 ms horizons —
+# step 27 adds coverage near the ~1 s peak-SNR horizon of the humanoid Δv
+# reference (label error grows linearly with horizon while the Δv signal
+# saturates around 1-2 s).
+dv:
+  - [1, 1.0]
+  - [3, 1.0]
+  - [9, 1.0]
+  - [27, 1.0]

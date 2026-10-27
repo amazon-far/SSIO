@@ -1,0 +1,24 @@
+# @package _global_
+# Tab. II "Ours", MIPO. HF stage1/lwr3ayev,
+# 0.1821 / 1.63 AVE (m/s) / ATE (m) on MIPO_Test. Longest Δv horizon 0.41 s (Tab. VI).
+#   python train_ssio.py +experiment=mipo/ssio
+defaults:
+  - override /dataset@train_dataset: MIPO_Train
+  - override /dataset@eval_dataset : MIPO_Valid
+  - override /network: airio_imu_only
+  - override /loss   : ssio_dv_1_3_9
+
+network:
+  num_imus: 1
+
+modality:
+  use_aux_imu: false
+  use_joints : false
+
+train:
+  lr          : 5.0e-5
+  decay       : 1.0e-5
+  batch       : 256
+  epoch       : 240
+  regularization_gate   : imu
+  regularization_weight : 0.01

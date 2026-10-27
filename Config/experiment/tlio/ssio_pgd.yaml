@@ -1,0 +1,18 @@
+# @package _global_
+# Tab. II "Ours (w/ PGD)", TLIO. HF stage2b/udfvlewc, fine-tuned from stage1/ev7hukzs,
+# 0.1007 / 2.99 AVE (m/s) / ATE (m) on TLIO_Test.
+#   python train_pgd.py +experiment=tlio/ssio_pgd train.resume_from=file:<SSIO_RUN>/best_model.pt
+defaults:
+  - override /dataset@train_dataset: TLIO_Train_Randomized
+  - override /dataset@eval_dataset : TLIO_Valid
+  - override /network: airio_imu_only
+  - override /loss   : adapt_mse
+  - override /graph  : sparse_imupgo
+
+train:
+  network_factor_sigma: 2.0
+  lr          : 5.0e-5
+  decay       : 1.0e-3
+  batch       : 512
+  epoch       : 7
+  dv_imu_input: raw   # TLIO ships bias-compensated IMU; no corrected stream

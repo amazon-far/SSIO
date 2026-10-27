@@ -1,0 +1,46 @@
+defaults:
+  - dataset@train_dataset : TLIO_Train_Randomized
+  - dataset@eval_dataset  : TLIO_Valid
+  - optimizer : adamw
+  - scheduler : constant
+  - network   : airio_imu_only
+  - graph     : sparse_imupgo
+  - loss      : adapt_mse
+  - _self_
+
+modality:
+  use_aux_imu: true   # false = main body IMU only (K=1)
+  use_joints : true   # false = drop joints, use network: airio_imu_only
+
+train:
+  lr    : 0.001
+  decay : 0.001
+  batch : 512
+  epoch : 128
+  window: 1024
+  ema   : true
+  gravity: 9.81007
+  checkpoint_every_epochs: 1
+  eval_plot_every_epochs: 10   # figure cadence only; eval metrics still log every epoch
+  max_train_steps: null
+  step_size: 252           # student window stride, a multiple of the network stride (9)
+  label_refresh_every_steps: null   # null: solve the graphs once, before training; N: re-solve every N steps
+  label_batch_windows: 64  # teacher windows per forward when stitching a trajectory
+  network_factor_sigma: ???  # required: isotropic std [m/s] of the network velocity factors in the pose graph
+  dv_imu_input: corrected       # corrected or raw
+  resume_from:
+
+meta:
+  device: ${as_device:'cuda:0'}
+  dtype : ${as_dtype:'fp32'}
+
+wandb:
+  project: SSIO
+  mode   : disabled   # online | offline | disabled — set online to log to W&B
+  name   : null
+
+hydra:
+  job:
+    chdir: false
+  run:
+    dir: ${host_env:EXP_DIR,./experiments}/train_pgd/${hydra:runtime.choices.dataset@train_dataset}/${now:%Y%m%d_%H%M%S}

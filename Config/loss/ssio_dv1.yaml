@@ -1,0 +1,4 @@
+_target_: Loss.ssio.FixedDvLoss
+
+dv: 
+  - [1, 1.]

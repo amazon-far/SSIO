@@ -1,0 +1,6 @@
+# Default: constant LR. ConstantLR with factor 1.0 multiplies the optimizer's
+# lr by 1 every epoch — a real scheduler object with no effect, so the
+# trainers never branch on "scheduler present?".
+_target_: torch.optim.lr_scheduler.ConstantLR
+factor: 1.0
+total_iters: 0

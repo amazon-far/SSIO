@@ -1,0 +1,35 @@
+# HumanoidOdom_Test.yaml — held-out evaluation clip, disjoint from HumanoidOdom_Train.
+#
+# One clip: the held-out clip whose bias calibration reduced dead-reckoning drift
+# in a dead-reckoning audit. It was recorded in the same session as several
+# HumanoidOdom_Train clips, so it measures within-session generalization.
+#
+# Pelvis IMU, native z-up — works with the default train.gravity=+9.81007
+# (see Sequence/HumanoidOdom.py).
+#
+# SlidingWindow with step == window, matching every other eval config: evaluate()
+# concatenates windows in order and assumes they do not overlap.
+
+_outer: &outer
+  _target_: Sequence.SlidingWindow.SlidingWindow
+  config:
+    window_size : ${train.window}
+    step_size   : ${train.window}
+
+_inner: &inner
+  _target_: Sequence.HumanoidOdom.HumanoidOdom
+
+_inner_config: &inner_config
+  data_root  : ${host_env:DATA_ROOT}/humanoid_g1
+  device     : ${meta.device}
+  dtype      : ${meta.dtype}
+  part       : pelvis
+  debias     : true
+  calibrater :          # static frames from IMU statistics, no GT speed (Doc/debias.md)
+    kind     : imu
+  acc_sigma  : 0.01
+  gyro_sigma : 0.01
+  gravity    : ${train.gravity}
+
+sequences:
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "10871_humanoid_20260520_223451"}}}

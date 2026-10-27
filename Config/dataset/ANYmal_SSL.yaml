@@ -1,0 +1,67 @@
+# ANYmal GrandTour SSL pool (20 GNSS + 8 indoor). GT velocity is the GT source's
+# filtered twist_lin, rotated to world in the loader. GNSS missions use gt_source=cpt7_ie; indoor SSL-only missions use
+# gt_source=state_estimator (leg-inertial, pool-only).
+# Train / Val / Test match the pools of the Open-IO/SSIO checkpoints.
+_outer: &outer
+  _target_: Sequence.RandomWindow.RandomWindow
+  config:
+    window_size: ${train.window}
+_inner: &inner
+  _target_: Sequence.ANYmal.ANYmal_Sequence
+_icg: &icg
+  data_root: ${host_env:DATA_ROOT}/grand_tour
+  device: ${meta.device}
+  dtype: ${meta.dtype}
+  acc_sigma: 0.1
+  gyro_sigma: 0.0316227766
+  num_imus: 1
+  num_joints: 12
+  target_rate: 200.0
+  gt_source: cpt7_ie
+  debias: true            # IMU-only static detector, no GT speed (Doc/debias.md)
+  calibrater: {kind: imu, gyro_mean_max: 0.005}
+  gravity: ${train.gravity}
+  imu_gt_offsets_json: ${host_env:DATA_ROOT}/grand_tour/anymal_imu_gt_offsets_per_imu.json
+_ici: &ici
+  data_root: ${host_env:DATA_ROOT}/grand_tour
+  device: ${meta.device}
+  dtype: ${meta.dtype}
+  acc_sigma: 0.1
+  gyro_sigma: 0.0316227766
+  num_imus: 1
+  num_joints: 12
+  target_rate: 200.0
+  gt_source: state_estimator
+  debias: true            # IMU-only static detector, no GT speed (Doc/debias.md)
+  calibrater: {kind: imu, gyro_mean_max: 0.005}
+  gravity: ${train.gravity}
+
+sequences:
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *icg, seq_name: "2024-11-02-17-10-25"}}}  # SPX-1  gnss
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *icg, seq_name: "2024-11-02-17-18-32"}}}  # SPX-2  gnss
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *icg, seq_name: "2024-11-04-12-55-59"}}}  # CYN-1  gnss
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *icg, seq_name: "2024-11-11-12-07-40"}}}  # PIL-1  gnss
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *icg, seq_name: "2024-11-14-11-17-02"}}}  # HOEB-1  gnss
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *icg, seq_name: "2024-11-14-15-22-43"}}}  # KAEB-2  gnss
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *icg, seq_name: "2024-11-14-16-04-09"}}}  # KAEB-3  gnss
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *icg, seq_name: "2024-11-15-11-18-14"}}}  # ALB-1  gnss
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *icg, seq_name: "2024-11-15-11-37-15"}}}  # ALB-2  gnss
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *icg, seq_name: "2024-11-15-12-06-03"}}}  # ALB-3  gnss
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *icg, seq_name: "2024-11-15-14-14-12"}}}  # LMB-1  gnss
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *icg, seq_name: "2024-11-15-14-43-52"}}}  # LMB-2  gnss
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *icg, seq_name: "2024-11-18-13-22-14"}}}  # ARC-2  gnss
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *icg, seq_name: "2024-11-18-13-48-19"}}}  # ARC-3  gnss
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *icg, seq_name: "2024-11-18-15-46-05"}}}  # ARC-4  gnss
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *icg, seq_name: "2024-11-18-16-59-23"}}}  # ARC-5  gnss
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *icg, seq_name: "2024-12-03-13-15-38"}}}  # SBB-1  gnss
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *icg, seq_name: "2024-12-03-13-26-40"}}}  # SBB-2  gnss
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *icg, seq_name: "2024-11-25-14-57-08"}}}  # LEICA-1  gnss
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *icg, seq_name: "2024-11-25-16-36-19"}}}  # LEICA-2  gnss
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *ici, seq_name: "2024-10-01-11-47-44"}}}  # ETH-2  indoor
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *ici, seq_name: "2024-11-11-16-14-23"}}}  # IND-11  indoor
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *ici, seq_name: "2024-11-18-17-13-09"}}}  # ARC-6  indoor
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *ici, seq_name: "2024-11-18-17-31-36"}}}  # ARC-7  indoor
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *ici, seq_name: "2024-12-09-09-34-43"}}}  # DEC-1  indoor
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *ici, seq_name: "2024-12-09-09-41-46"}}}  # DEC-2  indoor
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *ici, seq_name: "2024-12-09-11-28-28"}}}  # DEC-3  indoor
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *ici, seq_name: "2024-12-09-11-53-11"}}}  # DEC-4  indoor

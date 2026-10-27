@@ -1,0 +1,21 @@
+# @package _global_
+# Tab. II "Ours (w/ PGD)", GrandTour. HF stage2b/gp86b7p6, fine-tuned from stage1/3dqmg13r,
+# 0.0958 / 4.37 (equal to Ours: its best checkpoint was step 0) AVE (m/s) / ATE (m) on ANYmal_Test.
+#   python train_pgd.py +experiment=grandtour/ssio_pgd train.resume_from=file:<SSIO_RUN>/best_model.pt
+defaults:
+  - override /dataset@train_dataset: ANYmal_SSL
+  - override /dataset@eval_dataset : ANYmal_Val
+  - override /network: airio_imu_only
+  - override /loss   : adapt_mse
+  - override /graph  : sparse_imupgo
+
+modality:
+  use_aux_imu: false
+  use_joints : false
+
+train:
+  network_factor_sigma: 2.0
+  lr   : 5.0e-5
+  decay: 1.0e-3
+  batch: 512
+  epoch: 25

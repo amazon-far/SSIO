@@ -1,0 +1,61 @@
+# HumanoidOdom_Joints_Train.yaml — HumanoidOdom_Train (31 clips) with the G1's 29 joint
+# states. Validate with HumanoidOdom_Joints_Valid, evaluate with HumanoidOdom_Joints_Test.
+#
+# Joints are read from each clip's joints.npy (aligned 1:1 with time_ns.npy).
+#
+# Unitree G1: 29 joints, channels q / dq / tau_est -> position / velocity / effort
+# (ddq is all-zero and skipped). Pair with network=airio_joints_imu_only_humanoid.
+
+_outer: &outer
+  _target_: Sequence.RandomWindow.RandomWindow
+  config:
+    window_size : ${train.window}
+
+_inner: &inner
+  _target_: Sequence.HumanoidOdom.HumanoidOdom
+
+_inner_config: &inner_config
+  data_root  : ${host_env:DATA_ROOT}/humanoid_g1
+  device     : ${meta.device}
+  dtype      : ${meta.dtype}
+  part       : pelvis
+  joints     : true
+  debias     : true
+  calibrater :          # static frames from IMU statistics, no GT speed (Doc/debias.md)
+    kind     : imu
+  acc_sigma  : 0.01
+  gyro_sigma : 0.01
+  gravity    : ${train.gravity}   # keep debias and preintegration on one value
+
+sequences:
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "10708_navigation_20260527_193508"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "10708_navigation_20260527_193939"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "10708_navigation_20260527_194157"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "10708_navigation_20260527_194721"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "10871_combo_20260614_155255"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "10871_combo_20260614_160242"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "10871_combo_20260614_161048"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "10871_combo_20260614_162115"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "10871_combo_20260614_163655"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "10871_combo_20260614_164227"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "10871_dance_20260614_141248"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "10871_dance_20260614_142817"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "10871_dance_20260614_143729"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "10871_humanoid_20260505_172431"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "10871_humanoid_20260505_185111"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "10871_humanoid_20260505_191857"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "10871_humanoid_20260505_192546"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "10871_humanoid_20260520_152903"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "10871_humanoid_20260520_221759"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "10871_humanoid_20260520_222557"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "10871_humanoid_20260520_224042"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "10871_humanoid_20260520_224956"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "10871_humanoid_20260520_230203"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "10871_humanoid_20260520_230500"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "10871_kick_20260614_144639"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "10871_sprint_20260614_135200"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "10871_sprint_20260614_140145"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "10871_sprint_20260614_140517"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "11083_walking_20260612_183949"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "11083_walking_20260612_184302"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "11083_walking_20260612_184444"}}}

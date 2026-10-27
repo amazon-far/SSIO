@@ -1,0 +1,68 @@
+# MIPO_Train.yaml
+# 36 sequences (5 with GT freezes/jumps commented out), 5 IMUs, 16 joints.
+# Train / Valid / Test match the pools of the Open-IO/SSIO checkpoints.
+
+_outer: &outer
+  _target_: Sequence.RandomWindow.RandomWindow
+  config:
+    window_size : ${train.window}
+
+_inner: &inner
+  _target_: Sequence.MIPO.MIPO_Sequence
+
+_inner_config: &inner_config
+  data_root        : ${host_env:DATA_ROOT}/mipo_hdf5/indoor
+  device           : ${meta.device}
+  dtype            : ${meta.dtype}
+  acc_sigma        : 0.1
+  gyro_sigma       : 0.0316227766
+  num_imus         : 5
+  num_joints       : 16
+  target_rate      : 200.0
+  velocity_window_time: 0.1
+  calibration_file : ${host_env:DATA_ROOT}/mipo_hdf5/indoor/mipo_time_offsets.json
+  debias           : true
+  calibrater       : {kind: imu, debias_gyro: false}   # IMU-only static frames; IMU 0 acc only, aux IMUs stay raw
+
+sequences:
+  # - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "20230620_risqh_robustness_test/230620-risqh-trot-05-036-33square-kick3.h5"}}} # GT freezes + jumps (0.21s freeze, 0.26m jump) - GT unusable, ok for unsupervised
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "20230620_risqh_robustness_test/230620-risqh-standtrot-05-06-33square2.h5"}}}
+  # - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "20230620_risqh_robustness_test/230620-risqh-trot-10-052-33square-convexmpc.h5"}}} # GT freezes + jumps (3.18s freeze, 0.93m jump) - GT unusable, ok for unsupervised
+  # - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "20230620_risqh_robustness_test/230620-risqh-trot-10-036-freewalk-convexmpc.h5"}}} # GT freezes + jumps (3 freezes 1.2-1.5s, jumps 1.4-1.8m) - GT unusable, ok for unsupervised
+  # - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "20230620_risqh_robustness_test/230620-risqh-trot-10-048-33square-convexmpc.h5"}}} # GT freezes + jumps (0.66s freeze, 0.04m jump) - GT unusable, ok for unsupervised
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "20230620_risqh_robustness_test/230620-risqh-trot-05-036-33square-kick.h5"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "230622_robustness/230622-risqh-trot-10-040-33square.h5"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "230622_robustness/230622-risqh-trot-02-048-33square.h5"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "230622_robustness/230622-risqh-trot-08-036-33square.h5"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "230622_robustness/230622-risqh-trot-04-040-33square.h5"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "230622_robustness/230622-risqh-trot-06-036-33square2.h5"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "230622_robustness/230622-risqh-trot-06-048-33square.h5"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "230622_robustness/230622-risqh-trot-02-040-33square.h5"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "230622_robustness/230620-risqh-trot-02-036-33square.h5"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "230622_robustness/230622-risqh-trot-08-040-33square.h5"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "230622_robustness/230620-risqh-trot-04-036-33square.h5"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "230622_robustness/230622-risqh-trot-08-044-33square.h5"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "230622_robustness/230622-risqh-trot-04-044-33square.h5"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "20230625_gait/230625-risqh-flytrot-06-032-33square.h5"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "20230625_gait/230625-risqh-standtrot-02-044-33square.h5"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "20230625_gait/230625-risqh-flytrot-04-036-33square.h5"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "20230625_gait/230625-risqh-flytrot-10-036-33square.h5"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "20230625_gait/230625-risqh-standtrot-06-048-33square.h5"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "20230625_gait/230625-risqh-flytrot-06-040-33square.h5"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "20230625_gait/230625-risqh-flytrot-12-036-33square.h5"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "20230625_gait/230625-risqh-standtrot-02-048-33square.h5"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "20230625_gait/230625-risqh-standtrot-04-044-33square.h5"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "20230625_gait/230625-risqh-standtrot-06-044-33square.h5"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "20230625_gait/230625-risqh-standtrot-04-036-33square.h5"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "20230625_gait/230625-risqh-flytrot-02-040-33square.h5"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "20230625_gait/230625-risqh-flytrot-04-040-33square.h5"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "20230625_gait/230625-risqh-flytrot-02-036-33square.h5"}}}
+  # - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "20230620_risqh_robustness_test/230620-risqh-trot-10-044-33square-convexmpc.h5"}}} # GT freezes + jumps (3.42s freeze, 0.92m jump) - GT unusable, ok for unsupervised
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "20230625_gait/230625-risqh-flytrot-04-032-33square.h5"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "20230625_gait/230625-risqh-standtrot-06-036-33square.h5"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "20230625_gait/230625-risqh-flytrot-08-040-33square.h5"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "20230625_gait/230625-risqh-trot-06-040-8figure.h5"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "20230625_gait/230625-risqh-standtrot-04-040-33square.h5"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "20230625_gait/230625-risqh-standtrot-02-036-33square.h5"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "20230615_risqh_gait_analysis/20230615-risqh-standtrot-06-06-square-2.h5"}}}
+  - {<<: *outer, seq: {<<: *inner, config: {<<: *inner_config, seq_name: "20230615_risqh_gait_analysis/20230615-risqh-flyingtrot-04-04-square-more-stable.h5"}}}

@@ -1,0 +1,20 @@
+# @package _global_
+# Tab. III "AirIO† + Proprio" (supervised), MIPO. HF supervised/4ch9v4hx,
+# 0.1164 / 0.19 AVE (m/s) / ATE (m) on MIPO_Test.
+#   python train_ssio.py +experiment=mipo/airio_proprio
+defaults:
+  - override /dataset@train_dataset: MIPO_Train
+  - override /dataset@eval_dataset : MIPO_Valid
+  - override /network: airio_joints_imu_only
+  - override /loss   : supervised_only
+
+modality:
+  use_aux_imu: true
+  use_joints : true
+
+train:
+  lr          : 1.0e-3
+  decay       : 1.0e-3
+  batch       : 256
+  epoch       : 128
+  regularization_weight : 0.0

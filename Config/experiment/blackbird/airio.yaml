@@ -1,0 +1,17 @@
+# @package _global_
+# Tab. II "AirIO†" (supervised), Blackbird. HF supervised/dvilntqz,
+# 0.3621 / 6.39 AVE (m/s) / ATE (m) on BlackBird_Test. For the "AirIO" row add network=airio
+# (HF supervised/4ktbuoar).
+#   python train_ssio.py +experiment=blackbird/airio
+defaults:
+  - override /dataset@train_dataset: BlackBird_Train_Randomized
+  - override /dataset@eval_dataset : BlackBird_Valid
+  - override /network: airio_imu_only
+  - override /loss   : supervised_only
+
+train:
+  lr         : 1.0e-3
+  decay      : 1.0e-3
+  batch      : 512
+  epoch      : 120
+  regularization_weight: 0.0
